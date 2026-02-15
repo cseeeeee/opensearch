@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isEdit ? '도서 수정' : '도서 등록'} + ' - Book Search'">도서 등록 - Book Search</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+        .header { background: #2c3e50; color: white; padding: 16px 32px; }
+        .header h1 { font-size: 20px; }
+        .nav { background: #34495e; padding: 0 32px; display: flex; gap: 0; }
+        .nav a { color: #bdc3c7; text-decoration: none; padding: 12px 20px; font-size: 14px; }
+        .nav a:hover, .nav a.active { color: white; background: #2c3e50; }
+        .container { max-width: 700px; margin: 32px auto; padding: 0 16px; }
+        .card { background: white; border-radius: 8px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h2 { font-size: 18px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;
+        }
+        .form-group textarea { height: 100px; resize: vertical; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3498db; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .btn { padding: 10px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; text-decoration: none; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .form-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .required::after { content: ' *'; color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="header"><h1>Book Search Admin</h1></div>
+    <div class="nav">
+        <a href="/admin">대시보드</a>
+        <a href="/admin/books">도서 관리</a>
+        <a th:unless="${isEdit}" href="/admin/books/new" class="active">도서 등록</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2 th:text="${isEdit ? '도서 수정' : '새 도서 등록'}">새 도서 등록</h2>
+            <form th:action="${isEdit ? '/admin/books/' + bookId : '/admin/books'}" method="post">
+                <div class="form-group">
+                    <label class="required">도서명</label>
+                    <input type="text" name="title" th:value="${book.title}" required placeholder="도서명을 입력하세요">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">저자</label>
+                        <input type="text" name="author" th:value="${book.author}" required placeholder="저자명">
+                    </div>
+                    <div class="form-group">
+                        <label>출판사</label>
+                        <input type="text" name="publisher" th:value="${book.publisher}" placeholder="출판사">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>도서 소개</label>
+                    <textarea name="description" th:text="${book.description}" placeholder="도서 소개를 입력하세요"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ISBN</label>
+                        <input type="text" name="isbn" th:value="${book.isbn}" placeholder="ISBN">
+                    </div>
+                    <div class="form-group">
+                        <label>가격 (원)</label>
+                        <input type="number" name="price" th:value="${book.price}" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>출판일</label>
+                        <input type="date" name="publishedDate" th:value="${book.publishedDate}">
+                    </div>
+                    <div class="form-group">
+                        <label>카테고리</label>
+                        <input type="text" name="category" th:value="${book.category}" placeholder="예: IT, 문학, 경제">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>재고 수량</label>
+                        <input type="number" name="stockQuantity" th:value="${book.stockQuantity}" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>표지 이미지 URL</label>
+                        <input type="url" name="coverImageUrl" th:value="${book.coverImageUrl}" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"
+                            th:text="${isEdit ? '수정' : '등록'}">등록</button>
+                    <a href="/admin/books" class="btn btn-secondary">취소</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
