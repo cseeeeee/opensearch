@@ -1,7 +1,7 @@
 package com.example.booksearch.service;
 
 import com.example.booksearch.domain.Book;
-import com.example.booksearch.dto.BookRequest;
+import com.example.booksearch.dto.BookRequestDto;
 import com.example.booksearch.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class BookService {
      * @return 등록된 도서 엔티티
      */
     @Transactional
-    public Book createBook(BookRequest request) {
+    public Book createBook(BookRequestDto request) {
         Book book = Book.builder()
                 .title(request.getTitle())
                 .author(request.getAuthor())
@@ -87,7 +87,7 @@ public class BookService {
      * @return 수정된 도서 엔티티
      */
     @Transactional
-    public Book updateBook(Long id, BookRequest request) {
+    public Book updateBook(Long id, BookRequestDto request) {
         Book book = findById(id);
         book.update(request);
         return book;

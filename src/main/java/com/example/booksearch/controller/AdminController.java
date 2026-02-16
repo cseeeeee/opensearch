@@ -1,7 +1,7 @@
 package com.example.booksearch.controller;
 
 import com.example.booksearch.domain.Book;
-import com.example.booksearch.dto.BookRequest;
+import com.example.booksearch.dto.BookRequestDto;
 import com.example.booksearch.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -64,7 +64,7 @@ public class AdminController {
      */
     @GetMapping("/books/new")
     public String newBookForm(Model model) {
-        model.addAttribute("book", new BookRequest());
+        model.addAttribute("book", new BookRequestDto());
         model.addAttribute("isEdit", false);
         return "admin/book-form";
     }
@@ -77,7 +77,7 @@ public class AdminController {
      * @return 도서 목록으로 리다이렉트
      */
     @PostMapping("/books")
-    public String createBook(@ModelAttribute BookRequest request,
+    public String createBook(@ModelAttribute BookRequestDto request,
                              RedirectAttributes redirectAttributes) {
         bookService.createBook(request);
         redirectAttributes.addFlashAttribute("message", "도서가 등록되었습니다.");
@@ -94,7 +94,7 @@ public class AdminController {
     @GetMapping("/books/{id}/edit")
     public String editBookForm(@PathVariable Long id, Model model) {
         Book book = bookService.findById(id);
-        model.addAttribute("book", BookRequest.from(book));
+        model.addAttribute("book", BookRequestDto.from(book));
         model.addAttribute("bookId", id);
         model.addAttribute("isEdit", true);
         return "admin/book-form";
@@ -110,7 +110,7 @@ public class AdminController {
      */
     @PostMapping("/books/{id}")
     public String updateBook(@PathVariable Long id,
-                             @ModelAttribute BookRequest request,
+                             @ModelAttribute BookRequestDto request,
                              RedirectAttributes redirectAttributes) {
         bookService.updateBook(id, request);
         redirectAttributes.addFlashAttribute("message", "도서가 수정되었습니다.");

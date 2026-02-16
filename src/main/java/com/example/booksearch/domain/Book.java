@@ -1,6 +1,6 @@
 package com.example.booksearch.domain;
 
-import com.example.booksearch.dto.BookRequest;
+import com.example.booksearch.dto.BookRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 /**
  * 도서 정보 JPA Entity
  *
- * <p>PostgreSQL에 저장되는 도서 원본 데이터이며,
- * OpenSearch 인덱스와 동기화하여 검색에 활용</p>
+ * PostgreSQL에 저장되는 도서 원본 데이터
+ * OpenSearch 인덱스와 동기화하여 검색에 활용
  */
 @Entity
 @Table(name = "books")
@@ -113,7 +113,7 @@ public class Book {
      *
      * @param request 도서 수정 요청 DTO
      */
-    public void update(BookRequest request) {
+    public void update(BookRequestDto request) {
         this.title = request.getTitle();
         this.author = request.getAuthor();
         this.publisher = request.getPublisher();

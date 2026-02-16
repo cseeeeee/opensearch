@@ -1,6 +1,6 @@
 package com.example.booksearch.init;
 
-import com.example.booksearch.dto.BookRequest;
+import com.example.booksearch.dto.BookRequestDto;
 import com.example.booksearch.service.BookService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,9 +50,9 @@ public class DataInitializer implements ApplicationRunner {
 
         ClassPathResource resource = new ClassPathResource("data/books.json");
         try (InputStream is = resource.getInputStream()) {
-            List<BookRequest> requests = mapper.readValue(is, new TypeReference<>() {});
+            List<BookRequestDto> requests = mapper.readValue(is, new TypeReference<>() {});
 
-            for (BookRequest request : requests) {
+            for (BookRequestDto request : requests) {
                 bookService.createBook(request);
             }
 

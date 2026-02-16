@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookRequest {
+public class BookRequestDto {
 
     /** 도서명 */
     private String title;
@@ -47,9 +47,9 @@ public class BookRequest {
     private String coverImageUrl;
 
     @Builder
-    public BookRequest(String title, String author, String publisher, String description,
-                       String isbn, Integer price, LocalDate publishedDate, String category,
-                       Integer stockQuantity, String coverImageUrl) {
+    public BookRequestDto(String title, String author, String publisher, String description,
+                          String isbn, Integer price, LocalDate publishedDate, String category,
+                          Integer stockQuantity, String coverImageUrl) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -68,8 +68,8 @@ public class BookRequest {
      * @param book 변환할 도서 엔티티
      * @return 도서 요청 DTO
      */
-    public static BookRequest from(Book book) {
-        return BookRequest.builder()
+    public static BookRequestDto from(Book book) {
+        return BookRequestDto.builder()
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .publisher(book.getPublisher())
