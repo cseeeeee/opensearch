@@ -12,7 +12,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   opensearch:
-    image: opensearchproject/opensearch:2.11.0
+    build:
+      context: .
+      dockerfile: Dockerfile.opensearch
     container_name: book-search-opensearch
     environment:
       - discovery.type=single-node

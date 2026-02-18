@@ -30,6 +30,7 @@ dependencies {
 
     // OpenSearch
     implementation 'org.opensearch.client:spring-data-opensearch-starter:1.6.3'
+    implementation 'org.opensearch.client:opensearch-java:2.10.4'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
