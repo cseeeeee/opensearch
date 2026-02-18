@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * 도서 CRUD 비즈니스 로직 서비스
  *
- * <p>현재는 PostgreSQL(JPA)만 사용하며,
- * 이후 Phase에서 OpenSearch 동기화 로직 추가 예정</p>
+ * PostgreSQL 저장 후 OpenSearch에 동기화하여
+ * 양쪽 저장소의 데이터 일관성을 유지한다
  */
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookIndexService bookIndexService;
 
     /**
      * 도서 등록
@@ -45,7 +46,9 @@ public class BookService {
                 .coverImageUrl(request.getCoverImageUrl())
                 .build();
 
-        return bookRepository.save(book);
+        Book savedBook = bookRepository.save(book);
+        bookIndexService.indexBook(savedBook);
+        return savedBook;
     }
 
     /**
@@ -90,6 +93,7 @@ public class BookService {
     public Book updateBook(Long id, BookRequestDto request) {
         Book book = findById(id);
         book.update(request);
+        bookIndexService.indexBook(book);
         return book;
     }
 
@@ -102,6 +106,7 @@ public class BookService {
     public void deleteBook(Long id) {
         Book book = findById(id);
         bookRepository.delete(book);
+        bookIndexService.deleteBook(id);
     }
 
     /**

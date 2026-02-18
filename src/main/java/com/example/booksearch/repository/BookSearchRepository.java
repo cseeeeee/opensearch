@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * OpenSearch 도서 검색 Repository
  *
- * Spring Data의 메서드 이름 기반 쿼리 자동 생성 활용.
+ * Spring Data의 메서드 이름 기반 쿼리 자동 생성 활용
  * 단순 조건 검색용이며, 복합 검색(multi_match, bool, aggregation)은
- * BookIndexService에서 ElasticsearchOperations로 직접 처리.
+ * BookIndexService에서 ElasticsearchOperations로 직접 처리
  */
 public interface BookSearchRepository extends ElasticsearchRepository<BookDocument, Long> {
 

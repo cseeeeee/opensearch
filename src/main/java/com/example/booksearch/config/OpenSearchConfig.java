@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 /**
  * OpenSearch 연결 설정
  *
- * OpenSearchConfiguration 상속을 통한 클라이언트 자동 구성.
+ * OpenSearchConfiguration 상속을 통한 클라이언트 자동 구성
  * 아래 빈이 자동 등록됨:
  * <ul>
  *   <li>OpenSearchClient - OpenSearch 서버 통신용 클라이언트</li>

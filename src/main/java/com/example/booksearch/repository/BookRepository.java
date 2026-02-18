@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * 도서 데이터 JPA Repository
  *
- * <p>PostgreSQL에 저장된 도서 원본 데이터 CRUD</p>
+ * PostgreSQL에 저장된 도서 원본 데이터 CRUD
  */
 public interface BookRepository extends JpaRepository<Book, Long> {
 

@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * OpenSearch 인덱스 관리 및 문서 CRUD 서비스
  *
- * <p>인덱스 생성/삭제, 단건 문서 CRUD, 벌크 인덱싱을 담당한다.
- * BookService에서 PostgreSQL 저장 후 호출하여 OpenSearch 동기화를 수행한다.</p>
+ * 인덱스 생성/삭제, 단건 문서 CRUD, 벌크 인덱싱을 담당한다
+ * BookService에서 PostgreSQL 저장 후 호출하여 OpenSearch 동기화를 수행한다
  *
- * <p>OpenSearch 장애 시에도 PostgreSQL 작업에 영향을 주지 않도록
- * 각 메서드에서 예외를 catch하여 로그 경고로 처리한다.</p>
+ * OpenSearch 장애 시에도 PostgreSQL 작업에 영향을 주지 않도록
+ * 각 메서드에서 예외를 catch하여 로그 경고로 처리한다
  */
 @Service
 @RequiredArgsConstructor
@@ -49,8 +49,8 @@ public class BookIndexService {
     /**
      * 인덱스 생성 (이미 존재하면 스킵)
      *
-     * <p>BookDocument의 @Document, @Setting, @Mapping 어노테이션 기반으로
-     * 인덱스 설정(Nori 분석기)과 매핑을 함께 생성한다.</p>
+     * BookDocument의 @Document, @Setting, @Mapping 어노테이션 기반으로
+     * 인덱스 설정(Nori 분석기)과 매핑을 함께 생성한다
      */
     public void createIndexIfNotExists() {
         IndexOperations indexOps = elasticsearchOperations.indexOps(BookDocument.class);
@@ -71,8 +71,8 @@ public class BookIndexService {
     /**
      * 인덱스 삭제 후 재생성
      *
-     * <p>매핑 변경 시 사용. 기존 문서가 모두 삭제되므로
-     * 재생성 후 bulkIndexBooks()로 데이터를 다시 인덱싱해야 한다.</p>
+     * 매핑 변경 시 사용, 기존 문서가 모두 삭제되므로
+     * 재생성 후 bulkIndexBooks()로 데이터를 다시 인덱싱해야 한다
      */
     public void recreateIndex() {
         IndexOperations indexOps = elasticsearchOperations.indexOps(BookDocument.class);
@@ -95,7 +95,7 @@ public class BookIndexService {
     /**
      * 단건 문서 인덱싱 (생성/수정 겸용)
      *
-     * <p>동일 ID의 문서가 있으면 덮어쓴다 (upsert 동작).</p>
+     * 동일 ID의 문서가 있으면 덮어쓴다 (upsert 동작)
      *
      * @param book 인덱싱할 도서 엔티티
      */
@@ -129,8 +129,8 @@ public class BookIndexService {
     /**
      * 전체 도서 벌크 인덱싱
      *
-     * <p>대량 데이터를 {@value BULK_CHUNK_SIZE}건 단위로 분할하여 처리한다.
-     * ElasticsearchOperations.bulkIndex()를 사용하여 네트워크 왕복을 최소화한다.</p>
+     * 대량 데이터를 {@value BULK_CHUNK_SIZE}건 단위로 분할하여 처리한다
+     * ElasticsearchOperations.bulkIndex()를 사용하여 네트워크 왕복을 최소화한다
      *
      * @param books 인덱싱할 도서 엔티티 목록
      */

@@ -18,8 +18,8 @@ import java.util.List;
 /**
  * 애플리케이션 시작 시 초기 도서 데이터 로딩 컴포넌트
  *
- * <p>{@code src/main/resources/data/books.json} 파일을 읽어
- * DB에 데이터가 없을 경우 자동으로 샘플 도서 등록</p>
+ * src/main/resources/data/books.json 파일을 읽어
+ * DB에 데이터가 없을 경우 자동으로 샘플 도서 등록
  */
 @Slf4j
 @Component
@@ -31,7 +31,7 @@ public class DataInitializer implements ApplicationRunner {
     /**
      * 애플리케이션 기동 시 초기 데이터 로딩 실행
      *
-     * <p>DB에 도서 데이터가 없으면 books.json에서 초기 데이터 로딩</p>
+     * DB에 도서 데이터가 없으면 books.json에서 초기 데이터 로딩
      *
      * @param args 애플리케이션 실행 인자
      * @throws Exception JSON 파싱 또는 DB 저장 실패 시

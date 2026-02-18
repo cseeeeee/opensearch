@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 /**
  * OpenSearch 검색 인덱스용 도서 문서
  *
- * Book 엔티티와 동일한 데이터를 검색 최적화 형태로 저장.
- * Nori 한글 형태소 분석기 적용으로 한국어 Full-text 검색 지원.
+ * Book 엔티티와 동일한 데이터를 검색 최적화 형태로 저장
+ * Nori 한글 형태소 분석기 적용으로 한국어 Full-text 검색 지원
  *
  * 인덱스 매핑 전략:
  * <ul>
@@ -109,7 +109,7 @@ public class BookDocument {
      * JPA Book 엔티티 → OpenSearch BookDocument 변환 팩토리 메서드
      *
      * Book의 PK(id)를 OpenSearch 문서의 _id로 그대로 사용하여
-     * 양쪽 저장소 간 동기화 보장.
+     * 양쪽 저장소 간 동기화 보장
      *
      * @param book JPA Book 엔티티
      * @return OpenSearch 인덱싱용 BookDocument

@@ -15,8 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * 관리자용 도서 CRUD 컨트롤러
  *
- * <p>도서 목록 조회, 등록, 수정, 삭제 기능을 Thymeleaf 뷰와 함께 제공
- * 모든 경로는 {@code /admin/**} 하위에 매핑</p>
+ * 도서 목록 조회, 등록, 수정, 삭제 기능을 Thymeleaf 뷰와 함께 제공
+ * 모든 경로는 /admin/** 하위에 매핑
  */
 @Controller
 @RequestMapping("/admin")
