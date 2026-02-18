@@ -1,7 +1,9 @@
 package com.example.booksearch.controller;
 
 import com.example.booksearch.domain.Book;
+import com.example.booksearch.domain.BookDocument;
 import com.example.booksearch.dto.BookRequestDto;
+import com.example.booksearch.service.BookIndexService;
 import com.example.booksearch.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private final BookService bookService;
+    private final BookIndexService bookIndexService;
 
     /**
      * 관리자 대시보드 페이지 표시
@@ -41,18 +44,31 @@ public class AdminController {
     /**
      * 도서 목록 페이지 표시
      *
-     * @param page  페이지 번호 (0부터 시작, 기본값 0)
-     * @param size  페이지 크기 (기본값 10)
-     * @param model 뷰에 전달할 모델
+     * keyword가 있으면 OpenSearch 검색, 없으면 PostgreSQL 전체 목록
+     *
+     * @param page    페이지 번호 (0부터 시작, 기본값 0)
+     * @param size    페이지 크기 (기본값 10)
+     * @param keyword 검색 키워드 (선택)
+     * @param model   뷰에 전달할 모델
      * @return 도서 목록 뷰 이름
      */
     @GetMapping("/books")
-    public String bookList(@RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "10") int size,
-                           Model model) {
-        Page<Book> books = bookService.findAll(
-                PageRequest.of(page, size, Sort.by("id").descending()));
-        model.addAttribute("books", books);
+    public String bookList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            Model model
+    ) {
+        if (keyword != null && !keyword.isBlank()) {
+            Page<BookDocument> searchResult = bookIndexService.searchBooks(
+                    keyword.trim(), PageRequest.of(page, size));
+            model.addAttribute("books", searchResult);
+            model.addAttribute("keyword", keyword.trim());
+        } else {
+            Page<Book> books = bookService.findAll(
+                    PageRequest.of(page, size, Sort.by("id").descending()));
+            model.addAttribute("books", books);
+        }
         return "admin/book-list";
     }
 
@@ -109,9 +125,11 @@ public class AdminController {
      * @return 도서 목록으로 리다이렉트
      */
     @PostMapping("/books/{id}")
-    public String updateBook(@PathVariable Long id,
-                             @ModelAttribute BookRequestDto request,
-                             RedirectAttributes redirectAttributes) {
+    public String updateBook(
+            @PathVariable Long id,
+            @ModelAttribute BookRequestDto request,
+            RedirectAttributes redirectAttributes)
+    {
         bookService.updateBook(id, request);
         redirectAttributes.addFlashAttribute("message", "도서가 수정되었습니다.");
         return "redirect:/admin/books";

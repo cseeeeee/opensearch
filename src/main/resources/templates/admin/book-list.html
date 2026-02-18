@@ -30,6 +30,11 @@
         .pagination a { background: white; color: #333; border: 1px solid #ddd; }
         .pagination a:hover { background: #3498db; color: white; }
         .pagination span.current { background: #3498db; color: white; }
+        .search-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .search-bar input { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .search-bar input:focus { outline: none; border-color: #3498db; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
         .empty { text-align: center; padding: 48px; color: #888; }
         .actions { display: flex; gap: 6px; }
     </style>
@@ -43,8 +48,22 @@
     </div>
     <div class="container">
         <div th:if="${message}" class="message" th:text="${message}"></div>
+        <form class="search-bar" action="/admin/books" method="get">
+            <input type="text" name="keyword" placeholder="도서명, 저자, 설명으로 검색..."
+                   th:value="${keyword}">
+            <button type="submit" class="btn btn-primary">검색</button>
+            <a th:if="${keyword}" href="/admin/books" class="btn btn-secondary">초기화</a>
+        </form>
         <div class="toolbar">
-            <h2>도서 목록 (<span th:text="${books.totalElements}">0</span>건)</h2>
+            <h2>
+                <span th:if="${keyword}">
+                    '<span th:text="${keyword}">검색어</span>' 검색 결과
+                    (<span th:text="${books.totalElements}">0</span>건)
+                </span>
+                <span th:unless="${keyword}">
+                    도서 목록 (<span th:text="${books.totalElements}">0</span>건)
+                </span>
+            </h2>
             <a href="/admin/books/new" class="btn btn-primary">+ 새 도서 등록</a>
         </div>
         <div th:if="${books.totalElements == 0}" class="empty">
@@ -80,13 +99,17 @@
                 </tr>
             </tbody>
         </table>
-        <div class="pagination" th:if="${books.totalPages > 1}">
-            <a th:if="${books.number > 0}" th:href="@{'/admin/books?page=' + ${books.number - 1}}">이전</a>
+        <div class="pagination" th:if="${books.totalPages > 1}"
+             th:with="queryParam=${keyword != null ? '&keyword=' + keyword : ''}">
+            <a th:if="${books.number > 0}"
+               th:href="@{'/admin/books?page=' + ${books.number - 1} + ${queryParam}}">이전</a>
             <th:block th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}">
                 <span th:if="${i == books.number}" class="current" th:text="${i + 1}">1</span>
-                <a th:unless="${i == books.number}" th:href="@{'/admin/books?page=' + ${i}}" th:text="${i + 1}">1</a>
+                <a th:unless="${i == books.number}"
+                   th:href="@{'/admin/books?page=' + ${i} + ${queryParam}}" th:text="${i + 1}">1</a>
             </th:block>
-            <a th:if="${books.number < books.totalPages - 1}" th:href="@{'/admin/books?page=' + ${books.number + 1}}">다음</a>
+            <a th:if="${books.number < books.totalPages - 1}"
+               th:href="@{'/admin/books?page=' + ${books.number + 1} + ${queryParam}}">다음</a>
         </div>
     </div>
 </body>

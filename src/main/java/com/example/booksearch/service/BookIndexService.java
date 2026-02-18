@@ -5,11 +5,16 @@ import com.example.booksearch.domain.BookDocument;
 import com.example.booksearch.repository.BookSearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -122,6 +127,41 @@ public class BookIndexService {
         } catch (Exception e) {
             log.warn("도서 인덱스 삭제 실패: id={}, error={}", bookId, e.getMessage());
         }
+    }
+
+    // ── 검색 ─────────────────────────────────────────────
+
+    /**
+     * 키워드 기반 도서 검색 (multi_match)
+     *
+     * title, author, description 필드를 대상으로 Nori 형태소 분석 검색 수행
+     *
+     * @param keyword  검색 키워드
+     * @param pageable 페이지 정보
+     * @return 검색 결과 (Page)
+     */
+    public Page<BookDocument> searchBooks(String keyword, Pageable pageable) {
+        String queryString = String.format("""
+                {
+                  "multi_match": {
+                    "query": "%s",
+                    "fields": ["title^3", "author^2", "description"],
+                    "type": "best_fields"
+                  }
+                }
+                """, keyword.replace("\"", "\\\""));
+
+        var query = new org.springframework.data.elasticsearch.core.query.StringQuery(queryString);
+        query.setPageable(pageable);
+
+        SearchHits<BookDocument> searchHits = elasticsearchOperations.search(
+                query, BookDocument.class);
+
+        List<BookDocument> content = searchHits.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .toList();
+
+        return PageableExecutionUtils.getPage(content, pageable, searchHits::getTotalHits);
     }
 
     // ── 벌크 인덱싱 ─────────────────────────────────────

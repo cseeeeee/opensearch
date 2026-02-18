@@ -78,11 +78,11 @@ public class BookDocument {
     private String coverImageUrl;
 
     /** 등록 일시 - 정렬용 */
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
     /** 수정 일시 - 동기화 추적용 */
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatedAt;
 
     @Builder
