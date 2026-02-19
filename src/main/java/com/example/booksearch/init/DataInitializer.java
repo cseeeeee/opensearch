@@ -48,7 +48,7 @@ public class DataInitializer implements ApplicationRunner {
         // 1) OpenSearch 인덱스 생성 보장
         bookIndexService.createIndexIfNotExists();
 
-        // 2) DB에 데이터가 없으면 JSON에서 초기 로딩
+        // 2) DB에 데이터가 없으면 JSON에서 초기 로딩 (createBook 내부에서 개별 인덱싱 수행)
         if (bookService.count() == 0) {
             log.info("초기 도서 데이터 로딩 시작...");
 
@@ -66,13 +66,12 @@ public class DataInitializer implements ApplicationRunner {
                 log.info("초기 도서 데이터 {}건 로딩 완료", requests.size());
             }
         } else {
+            // 3) 기존 DB 데이터가 있으면 OpenSearch 동기화 (재기동 시 누락 복구)
             log.info("기존 도서 데이터 {}건 존재, 초기 데이터 로딩 스킵", bookService.count());
-        }
-
-        // 3) DB 전체 도서를 OpenSearch에 벌크 인덱싱 (누락 데이터 동기화)
-        List<Book> allBooks = bookService.findAll();
-        if (!allBooks.isEmpty()) {
-            bookIndexService.bulkIndexBooks(allBooks);
+            List<Book> allBooks = bookService.findAll();
+            if (!allBooks.isEmpty()) {
+                bookIndexService.bulkIndexBooks(allBooks);
+            }
         }
     }
 }
